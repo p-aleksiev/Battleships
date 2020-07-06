@@ -1,6 +1,5 @@
 package com.games.battleships.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,23 +7,26 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
-@NoArgsConstructor
 @Getter
 @Setter
-@Table(name = "battleships")
+@NoArgsConstructor
+@Table(name = "users")
 @Entity
-public class Battleship {
+public class User {
 
     @Id
     @GeneratedValue(generator = "uuid-string")
     @GenericGenerator(name = "uuid-string", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "ship_id", nullable = false, unique = true, updatable = false)
+    @Column(name = "user_id", nullable = false, unique = true, updatable = false)
     private String id;
 
-    @Column(name = "ship_size")
-    private Integer size;
+    @Column(name = "username")
+    private String username;
+
+    @Column(name = "password")
+    private String password;
 
     @OneToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "user_details_id")
+    private UserDetails userDetails;
 }
