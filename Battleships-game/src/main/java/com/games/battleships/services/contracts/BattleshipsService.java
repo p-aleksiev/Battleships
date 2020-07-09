@@ -1,5 +1,6 @@
 package com.games.battleships.services.contracts;
 
+import com.games.battleships.models.BattleshipsGame;
 import com.games.battleships.models.Square;
 
 public interface BattleshipsService {
@@ -9,4 +10,8 @@ public interface BattleshipsService {
     int[] computerTurn();
 
     Square[][] createEmptyField();
+
+    String createBattleshipsGame (BattleshipsGame battleshipsGame);
+
+    BattleshipsGame getGameById(String id);
 }

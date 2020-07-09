@@ -1,11 +1,22 @@
 package com.games.battleships.services;
 
+import com.games.battleships.models.BattleshipsGame;
 import com.games.battleships.models.Square;
+import com.games.battleships.repositories.BattleshipsRepository;
 import com.games.battleships.services.contracts.BattleshipsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 
 @Service
 public class BattleshipsServiceImpl implements BattleshipsService {
+
+    private final BattleshipsRepository battleshipsRepository;
+
+    @Autowired
+    public BattleshipsServiceImpl(BattleshipsRepository battleshipsRepository) {
+        this.battleshipsRepository = battleshipsRepository;
+    }
 
     @Override
     public int[] computerTurn() {
@@ -28,15 +39,27 @@ public class BattleshipsServiceImpl implements BattleshipsService {
     }
 
     @Override
+    public String createBattleshipsGame(BattleshipsGame battleshipsGame) {
+        battleshipsRepository.saveAndFlush(battleshipsGame);
+        return battleshipsGame.getId();
+    }
+
+    @Override
+    public BattleshipsGame getGameById(String id) {
+        return battleshipsRepository.getById(id);
+    }
+
+    @Override
     public Square[][] arrangeShips(int[] shipSizes) {
         Square[][] matrix = createEmptyField();
 
         for (int shipSize : shipSizes) {
-            while (true) {
+            boolean shipPlaced = false;
+
+            while (!shipPlaced) {
                 int row = (int) (Math.random() * 10);
                 int col = (int) (Math.random() * 10);
                 int upDownLeftOrRight = (int) (Math.random() * 4);
-                boolean shipPlaced = false;
 
                 switch (upDownLeftOrRight) {
                     case 0:
@@ -51,10 +74,6 @@ public class BattleshipsServiceImpl implements BattleshipsService {
                     case 3:
                         shipPlaced = placeRight(matrix, shipSize, row, col);
                         break;
-                }
-
-                if (shipPlaced) {
-                    break;
                 }
             }
         }

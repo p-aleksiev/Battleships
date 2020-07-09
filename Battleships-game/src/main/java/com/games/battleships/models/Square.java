@@ -10,7 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Square {
-    private int value = 0;
+    private int value;
 
     @Override
     public String toString() {
