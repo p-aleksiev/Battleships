@@ -7,11 +7,14 @@ public interface BattleshipsService {
 
     Square[][] arrangeShips(int[] shipSizes);
 
-    int[] computerTurn();
+    void computerTurn(String gameId);
+
+    void playerTurn(String gameId, int[] coordinates);
 
     Square[][] createEmptyField();
 
-    String createBattleshipsGame (BattleshipsGame battleshipsGame);
+    BattleshipsGame createBattleshipsGame();
 
     BattleshipsGame getGameById(String id);
+
 }

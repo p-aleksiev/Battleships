@@ -26,7 +26,15 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @OneToOne
-    @JoinColumn(name = "user_details_id")
-    private UserDetails userDetails;
+    @Column(name = "first_name")
+    private String firstName;
+
+    @Column(name = "last_name")
+    private String lastName;
+
+    @Column(name = "email")
+    private String email;
+
+    @Column(name = "profile_picture")
+    private String profilePicture;
 }

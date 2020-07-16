@@ -6,12 +6,13 @@ import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "games")
+@Table(name = "battleships_games")
 public class BattleshipsGame {
 
     @Id
@@ -21,12 +22,15 @@ public class BattleshipsGame {
     private String id;
 
 
+    @Lob
     @Column(name = "player_field")
     private byte[] playerField;
 
+    @Lob
     @Column(name = "computer_field")
     private byte[] computerField;
 
+    @Lob
     @Column(name = "visual_field")
     private byte[] visualField;
 }

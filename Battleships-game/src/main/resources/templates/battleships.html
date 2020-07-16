@@ -2,56 +2,62 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
+
 <th:block th:include="~{/fragments/head.html}"/>
 
 <body>
 
-    <div class="row" style="margin-left: 180px;margin-top: 50px">
-        <div class="col">
-            <table>
-                <tbody>
-                <tr th:each="row : ${playerField}" style="border: none">
-                    <td th:each="element : ${row}" style="padding: 3px">
+<div class="row" style="margin-left: 180px;margin-top: 50px">
+    <div class="col">
+        <table>
+            <tbody>
+            <tr th:each="row : ${playerField}" style="border: none">
+                <td th:each="element : ${row}" style="padding: 3px">
 
-                        <a th:if="${element.getValue()} == 0" class="waves-effect waves-light grey lighten-1 btn"
-                           style="width: 50px;height: 50px"> </a>
-                        <a th:if="${element.getValue()} == 1" class="waves-effect waves-light green accent-4 btn"
-                           style="width: 50px;height: 50px"> </a>
-                        <a th:if="${element.getValue()} == 2" class="waves-effect waves-light amber accent-3 btn"
-                           style="width: 50px;height: 50px"> </a>
-                        <a th:if="${element.getValue()} == 3" class="waves-effect waves-light red accent-3 btn"
-                           style="width: 50px;height: 50px"> </a>
+                    <a th:if="${element.getValue()} == 0" class="waves-effect waves-light grey lighten-1 btn"
+                       style="width: 50px;height: 50px"> </a>
+                    <a th:if="${element.getValue()} == 1" class="waves-effect waves-light green accent-4 btn"
+                       style="width: 50px;height: 50px"> </a>
+                    <a th:if="${element.getValue()} == 2" class="waves-effect waves-light amber accent-3 btn"
+                       style="width: 50px;height: 50px"> </a>
+                    <a th:if="${element.getValue()} == 3" class="waves-effect waves-light red accent-3 btn"
+                       style="width: 50px;height: 50px"> </a>
 
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="col">
-            <table>
-                <tbody>
-                <tr th:each="row : ${computerField}" style="border: none">
-                    <td th:each="element : ${row}" style="padding: 3px">
-
-                        <a th:if="${element.getValue()} == 0" class="waves-effect waves-light grey lighten-1 btn"
-                           style="width: 50px;height: 50px"> </a>
-                        <a th:if="${element.getValue()} == 1" class="waves-effect waves-light green accent-4 btn"
-                           style="width: 50px;height: 50px"> </a>
-                        <a th:if="${element.getValue()} == 2" class="waves-effect waves-light amber accent-3 btn"
-                           style="width: 50px;height: 50px"> </a>
-                        <a th:if="${element.getValue()} == 3" class="waves-effect waves-light red accent-3 btn"
-                           style="width: 50px;height: 50px"> </a>
-
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 
+    <div class="col">
+        <table>
+            <tbody>
+            <tr th:each="row,iterRow : ${visualField}" style="border: none">
+                <td th:each="element,iterCol : ${row}" style="padding: 3px">
+                    <form action='#' th:action="@{${game.id} + '/turn/' + ${iterRow.index} + '/' + ${iterCol.index}}"
+                          method="post"
+                          th:object="${element}"
+                          id="cell_form">
 
+                    <a th:href="@{${game.id} + '/turn/' + ${iterRow.index} + '/' + ${iterCol.index}}"
+                       th:if="${element.getValue()} == 0" id="submit-button" class="waves-effect waves-light grey lighten-1 btn"
+                       style="width: 50px;height: 50px"> </a>
+                    </form>
+                    <a th:if="${element.getValue()} == 1" class="waves-effect waves-light green accent-4 btn"
+                       style="width: 50px;height: 50px"> </a>
+                    <a th:if="${element.getValue()} == 2" class="waves-effect waves-light amber accent-3 btn"
+                       style="width: 50px;height: 50px"> </a>
+                    <a th:if="${element.getValue()} == 3" class="waves-effect waves-light red accent-3 btn"
+                       style="width: 50px;height: 50px"> </a>
 
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script th:src="@{my-js/my-js.js}"></script>
 <!--JAVASCRIPT SCRIPTS-->
 <th:block th:include="~{/fragments/scripts.html}"/>
 </body>

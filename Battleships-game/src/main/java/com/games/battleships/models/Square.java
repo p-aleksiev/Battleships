@@ -5,35 +5,20 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Square {
+public class Square implements Serializable{
     private int value;
+    private int row;
+    private int col;
 
     @Override
     public String toString() {
         return super.toString();
     }
 
-    public int[] indexOf(Square square, Square[][] matrix){
-
-        int[] coordinates = new int[2];
-
-        Outercycle:
-        for (int i = 0; i < matrix.length; i++) {
-            for (int j = 0; j < matrix[i].length; j++) {
-                if(matrix[i][j].equals(square)){
-                    coordinates[0] = i;
-                    coordinates[1] = j;
-                    break Outercycle;
-                }else {
-                    coordinates[0] = -1;
-                    coordinates[1] = -1;
-                }
-            }
-        }
-        return coordinates;
-    }
 }

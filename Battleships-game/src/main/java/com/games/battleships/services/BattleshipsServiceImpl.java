@@ -4,26 +4,66 @@ import com.games.battleships.models.BattleshipsGame;
 import com.games.battleships.models.Square;
 import com.games.battleships.repositories.BattleshipsRepository;
 import com.games.battleships.services.contracts.BattleshipsService;
+import com.games.battleships.services.contracts.IOService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import static com.games.battleships.Constants.SHIP_SIZES;
 
 
 @Service
 public class BattleshipsServiceImpl implements BattleshipsService {
 
     private final BattleshipsRepository battleshipsRepository;
+    private final IOService ioService;
 
     @Autowired
-    public BattleshipsServiceImpl(BattleshipsRepository battleshipsRepository) {
+    public BattleshipsServiceImpl(BattleshipsRepository battleshipsRepository, IOService ioService) {
         this.battleshipsRepository = battleshipsRepository;
+        this.ioService = ioService;
     }
 
     @Override
-    public int[] computerTurn() {
-        return new int[]{
-                (int) (Math.random() * 10),
-                (int) (Math.random() * 10)
-        };
+    public void computerTurn(String gameId) {
+
+        BattleshipsGame game = battleshipsRepository.getById(gameId);
+        Square[][] playerField = ioService.deserializeGameField(game.getPlayerField());
+
+        while (true){
+            int x = (int) (Math.random() * 10);
+            int y = (int) (Math.random() * 10);
+
+            if(playerField[x][y].getValue() == 0){
+                playerField[x][y].setValue(2);
+                break;
+            }
+
+            if(playerField[x][y].getValue() == 1){
+                playerField[x][y].setValue(3);
+                break;
+            }
+        }
+
+        game.setPlayerField(ioService.serializeGameField(playerField));
+        battleshipsRepository.saveAndFlush(game);
+    }
+
+    @Override
+    public void playerTurn(String gameId, int[] coordinates) {
+
+        BattleshipsGame game = battleshipsRepository.getById(gameId);
+        Square[][] computerField = ioService.deserializeGameField(game.getComputerField());
+        Square[][] visualField = ioService.deserializeGameField(game.getVisualField());
+
+
+        if(computerField[coordinates[0]][coordinates[1]].getValue() == 0){
+            visualField[coordinates[0]][coordinates[1]].setValue(2);
+        }else {
+            visualField[coordinates[0]][coordinates[1]].setValue(3);
+        }
+
+        game.setVisualField(ioService.serializeGameField(visualField));
+        battleshipsRepository.saveAndFlush(game);
     }
 
     @Override
@@ -32,16 +72,26 @@ public class BattleshipsServiceImpl implements BattleshipsService {
 
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix[i].length; j++) {
-                matrix[i][j] = new Square(0);
+                matrix[i][j] = new Square(0,i,j);
             }
         }
         return matrix;
     }
 
     @Override
-    public String createBattleshipsGame(BattleshipsGame battleshipsGame) {
-        battleshipsRepository.saveAndFlush(battleshipsGame);
-        return battleshipsGame.getId();
+    public BattleshipsGame createBattleshipsGame() {
+        BattleshipsGame game = new BattleshipsGame();
+
+        Square[][] playerField = this.arrangeShips(SHIP_SIZES);
+        Square[][] computerField = this.arrangeShips(SHIP_SIZES);
+        Square[][] visualField = this.createEmptyField();
+
+        game.setPlayerField(ioService.serializeGameField(playerField));
+        game.setComputerField(ioService.serializeGameField(computerField));
+        game.setVisualField(ioService.serializeGameField(visualField));
+
+        battleshipsRepository.saveAndFlush(game);
+        return game;
     }
 
     @Override
@@ -63,16 +113,16 @@ public class BattleshipsServiceImpl implements BattleshipsService {
 
                 switch (upDownLeftOrRight) {
                     case 0:
-                        shipPlaced = placeUp(matrix, shipSize, row, col);
+                        shipPlaced = this.placeUp(matrix, shipSize, row, col);
                         break;
                     case 1:
-                        shipPlaced = placeDown(matrix, shipSize, row, col);
+                        shipPlaced = this.placeDown(matrix, shipSize, row, col);
                         break;
                     case 2:
-                        shipPlaced = placeLeft(matrix, shipSize, row, col);
+                        shipPlaced = this.placeLeft(matrix, shipSize, row, col);
                         break;
                     case 3:
-                        shipPlaced = placeRight(matrix, shipSize, row, col);
+                        shipPlaced = this.placeRight(matrix, shipSize, row, col);
                         break;
                 }
             }

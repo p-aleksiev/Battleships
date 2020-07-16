@@ -21,23 +21,25 @@ public class IOServiceImpl implements IOService {
             oot.writeObject(field);
             oot.flush();
             serialized = bos.toByteArray();
+            return serialized;
         } catch (IOException ex) {
-            logger.warning(ex.getMessage());
+            logger.warning(ex.toString());
         }
 
         return serialized;
     }
 
     @Override
-    public Square[][] deserializeGameField(byte[] serialized) {
+    public Square[][] deserializeGameField(byte[] serializedField) {
         Square[][] field = null;
-        try(ByteArrayInputStream bis = new ByteArrayInputStream(serialized);
+        try(ByteArrayInputStream bis = new ByteArrayInputStream(serializedField);
             ObjectInput in = new ObjectInputStream(bis))    {
 
             Object o = in.readObject();
             field = (Square[][]) o;
+            return field;
         } catch (IOException | ClassNotFoundException ex) {
-            logger.warning(ex.getMessage());
+            logger.warning(ex.toString());
         }
 
         return field;
